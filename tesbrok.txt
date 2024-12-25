@@ -138,6 +138,8 @@ Route::get('/penilaian/hasil/{penilaian_id}', [PenilaianController::class, 'hasi
 // Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('topsis.hitung'); // Menghitung peringkat alternatif menggunakan TOPSIS
 // Route::get('/topsis/hasil', [TopsisController::class, 'showHasil'])->name('topsis.hasil'); // Menampilkan hasil perhitungan TOPSIS
 
-// // Rute untuk TOPSIS
-// Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('topsis.hitung'); // Menghitung peringkat alternatif menggunakan TOPSIS
-// Route::get('/topsis/hasil', [TopsisController::class, 'showHasil'])->name('topsis.hasil'); // Menampilkan hasil perhitungan TOPSIS
+
+
+
+
+ANJAY MABAR
