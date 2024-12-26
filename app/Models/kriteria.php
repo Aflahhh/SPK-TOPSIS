@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class kriteria extends Model
 {
-    protected $fillable = [
-        'kode_kriteria',
-        'nama_kriteria',
-        'atribut',
-        'bobot',
+    protected $guarded = [
+        'id',
     ];
     public function subKriteria()
     {
         return $this->hasMany(SubKriteria::class); // One Kriteria has many SubKriteria
     }
+
+    
     
 
 }

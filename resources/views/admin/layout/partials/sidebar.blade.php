@@ -27,6 +27,14 @@
                 </a>
             </li>
 
+            {{-- PERINGKAT --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('peringkat*') ? 'active' : 'collapsed' }}" href="/peringkat">
+                    <i class="bi bi-list-stars"></i>
+                    <span>Peringkat</span>
+                </a>
+            </li>
+
             {{-- Master Data --}}
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('master*') ? '' : 'collapsed' }}" data-bs-target="#components-nav"
@@ -52,6 +60,37 @@
                         <a href="{{ route('mapel.index') }}"
                             class="{{ request()->is('master/mapel') ? 'active' : 'collapse' }}">
                             <i class="bi bi-circle"></i><span>Data Mapel</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+            {{-- Kriteria --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('kinerja*') ? '' : 'collapsed' }}" data-bs-target="#components-nav2"
+                    data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-tags"></i> <span>Kriteria</span> <i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav2" class="nav-content collapse {{ request()->is('kinerja*') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('kriteria.index') }}"
+                            class="{{ request()->is('/kinerja/kriteria') ? 'active' : 'collapse' }}">
+                            <i class="bi bi-circle"></i><span>Data Kriteria</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('subkriteria.index') }}"
+                            class="{{ request()->is('/kinerja/subkriteria') ? 'active' : 'collapse' }}">
+                            <i class="bi bi-circle"></i><span>Data Sub Kriteria</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('penilaian.penilaianPegawai') }}"
+                            class="{{ request()->is('/kinerja/penilaian') ? 'active' : 'collapse' }}">
+                            <i class="bi bi-circle"></i><span>Data Kriteria Pegawai</span>
                         </a>
                     </li>
                 </ul>

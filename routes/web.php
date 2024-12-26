@@ -103,8 +103,14 @@ Route::delete('/kinerja/subkriteria/hapus/{id}', [SubKriteriaController::class, 
 
 
 // Penilaian Kinerja
-Route::get('/kinerja/penilaian', [PenilaianController::class, 'penilaianPegawai'])->name('penilaian.penilaianPegawai'); // Menampilkan form penilaian untuk pegawai tertentu
-Route::post('/kinerja/penilaian', [PenilaianController::class, 'create'])->name('penilaian.create'); // Menyimpan nilai penilaian
+Route::get('/kinerja/penilaian', [PenilaianController::class, 'index'])->name('penilaian.penilaianPegawai'); // Menampilkan form penilaian untuk pegawai tertentu
+Route::get('/kinerja/penilaian/{id}', [PenilaianController::class, 'edit'])->name('penilaian.edit');
+Route::post('/kinerja/penilaian', [PenilaianController::class, 'store'])->name('penilaian.store');
+
+Route::get('/peringkat', [PenilaianController::class, 'peringkat'])->name('peringkat');
+Route::get('/peringkat/{id}', [PenilaianController::class, 'peringkatDetail'])->name('peringkat.detail');
+
+
 Route::get('/kinerja/penilaian/get-data', [PegawaiController::class, 'getPegawaiByNip'])->name('penilaian.getData');
 Route::post('/kinerja/penilaian/savePenilaianKinerja', [PenilaianController::class, 'savePenilaianKinerja'])->name('penilaian.simpan'); // Menyimpan nilai penilaian
 
@@ -118,3 +124,4 @@ Route::get('/penilaian/hasil/{penilaian_id}', [PenilaianController::class, 'hasi
 // // Rute untuk TOPSIS
 // Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('topsis.hitung'); // Menghitung peringkat alternatif menggunakan TOPSIS
 // Route::get('/topsis/hasil', [TopsisController::class, 'showHasil'])->name('topsis.hasil'); // Menampilkan hasil perhitungan TOPSIS
+
