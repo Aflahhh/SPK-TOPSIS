@@ -138,8 +138,20 @@ Route::get('/penilaian/hasil/{penilaian_id}', [PenilaianController::class, 'hasi
 // Route::get('/topsis/hitung', [TopsisController::class, 'hitungTopsis'])->name('topsis.hitung'); // Menghitung peringkat alternatif menggunakan TOPSIS
 // Route::get('/topsis/hasil', [TopsisController::class, 'showHasil'])->name('topsis.hasil'); // Menampilkan hasil perhitungan TOPSIS
 
+<<<<<<< HEAD
+// Penilaian Kinerja
+Route::get('/kinerja/penilaian', [PenilaianController::class, 'penilaianPegawai'])->name('penilaian.penilaianPegawai'); // Menampilkan form penilaian untuk pegawai tertentu
+Route::post('/kinerja/penilaian', [PenilaianController::class, 'create'])->name('penilaian.create'); // Menyimpan nilai penilaian
+Route::get('/kinerja/penilaian/get-data', [PegawaiController::class, 'getPegawaiByNip'])->name('penilaian.getData');
+Route::post('/kinerja/penilaian/savePenilaianKinerja', [PenilaianController::class, 'savePenilaianKinerja'])->name('penilaian.simpan'); // Menyimpan nilai penilaian
+=======
 
 
 
 
+ HEAD
 ANJAY MABAR kakeka
+
+ANJAY MABAR
+ f41417270723cf56fd702cf889f8a909f8a89aaf
+ 47ca9c501aaf366ffae093196ef1c8cfdd39ed76

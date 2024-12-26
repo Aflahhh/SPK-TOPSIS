@@ -1,5 +1,4 @@
 @extends('admin.layout.main')
-
 @section('content')
     <div class="pagetitle">
         <h1>Profil Pegawai</h1>
@@ -14,9 +13,7 @@
 
     <section class="section profile">
         <div class="row">
-
-            <div class="col-xl-8">
-
+            <div class="col-12">
                 <div class="card rounded-4">
                     <div class="card-body">
 
@@ -147,15 +144,12 @@
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Status Jabatan</div>
                                 <div class="col-lg-8 col-md-7">
-                                    @if ($data->status_jabatan == 'GTT')
-                                        Guru Tidak Tetap
-                                    @elseif ($data->status_jabatan == 'GTY')
-                                        Guru Tetap Yayasan
-                                    @elseif ($data->status_jabatan == 'DPK')
-                                        Diperhitungkan
+                                    @if ($data->statusJabatan)
+                                        {{ $data->statusJabatan->status_jabatan }}
                                     @else
                                         -
                                     @endif
+
                                 </div>
                             </div>
 
@@ -203,29 +197,40 @@
         </div>
     </section>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
             // Ambil nilai TTL dari input hidden
-            const ttl = document.getElementById("ttl").value;
+            const ttl = $("#ttl").val();
 
-            // Pisahkan string berdasarkan ", "
-            const [tempat, tanggal] = ttl.split(", "); // tempat = "Kudus", tanggal = "2000-02-10"
+            if (ttl) {
+                // Pisahkan string berdasarkan ", "
+                const [tempat, tanggal] = ttl.split(", "); // tempat = "Kudus", tanggal = "2000-02-10"
 
-            // Parsing tanggal
-            const date = new Date(tanggal);
+                // Parsing tanggal
+                const date = new Date(tanggal);
 
-            // Tambahkan 60 tahun ke tanggal
-            date.setFullYear(date.getFullYear() + 60);
+                // Tambahkan 60 tahun ke tanggal
+                date.setFullYear(date.getFullYear() + 60);
 
-            // Format tanggal menjadi dd-mm-yyyy
-            const formattedDate = date.toLocaleDateString("id-ID", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
+                // Format tanggal menjadi dd-mm-yyyy
+                const formattedDate = date.toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                });
+
+                // Tampilkan hasil ke elemen HTML
+                $("#perkiraanPensiun").text(formattedDate);
+            }
+        });
+
+        $(document).ready(function() {
+            // Cari semua elemen dengan kelas "form-control" yang memiliki atribut "disabled"
+            $(".form-control:disabled").css({
+                background: "#fff",
+                border: "none"
             });
-
-            // Tampilkan hasil ke elemen HTML
-            document.getElementById("perkiraanPensiun").textContent = formattedDate;
         });
     </script>
 @endsection

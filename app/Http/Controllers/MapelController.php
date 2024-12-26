@@ -2,52 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\mapel;
 use Illuminate\Http\Request;
+use App\Models\mapel; // Pastikan model Mapel sudah ada
 
-class mapelController extends Controller
+class MapelController extends Controller
 {
+    /**
+     * Menampilkan semua data mapel.
+     */
     public function index()
     {
-        $mapel = mapel::all();        
-        return view('admin.mapel.index', compact('mapel'));
+        $mapels = mapel::all(); // Mengambil semua data mapel
+        return view('admin.mapel.index', compact('mapels')); // Mengirim data ke view
     }
-    
-    public function create(Request $request)
+
+    /**
+     * Menyimpan data mapel baru.
+     */
+    public function store(Request $request)
     {
-        $masuk = $request->validate([
-            'mapel' => 'required|string',
-        ]);           
-
-        $mapel                  = new mapel();
-        $mapel->mapel    = $masuk['mapel'];
-        $mapel->save();
-        
-        return redirect()->route('mapel.index')->with('tambah', 'Data Berhasil Ditambahkan');
-
-    }
-
-    public function update(Request $request, $id){
-        $request -> validate ([
-            'mapel'=>'required',
-        ], [
-            'mapel.required'=>'Nama mapel Wajib Diisi',
+        // Validasi input
+        $request->validate([
+            'mapel' => 'required|string|max:255',
         ]);
 
-        $update = ([
-            'mapel' => $request -> mapel,
+        // Simpan data ke database
+        mapel::create([
+            'mapel' => $request->mapel,
         ]);
 
-        mapel::find($id)->update($update);
-        return redirect()->route('mapel.index')->with('edit', 'Data Berhasil Diubah');
+        // Redirect dengan pesan sukses
+        return redirect()->route('mapel.index')->with('added', 'Data berhasil ditambahkan!');
     }
 
-    public function destroy($id) 
+    /**
+     * Memperbarui data mapel berdasarkan ID.
+     */
+    public function update(Request $request, $id)
     {
+        // Validasi input
+        $request->validate([
+            'mapel' => 'required|string|max:255',
+        ]);
+
+        // Cari data berdasarkan ID
         $mapel = mapel::findOrFail($id);
-        $mapel->delete();
-    
-        return redirect()->route('mapel.index')->with('hapus', 'Data Berhasil Dihapus');
+
+        // Update data
+        $mapel->update([
+            'mapel' => $request->mapel,
+        ]);
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('mapel.index')->with('updated', 'Data berhasil diupdate!');
     }
 
+    /**
+     * Menghapus data mapel berdasarkan ID.
+     */
+    public function destroy($id)
+    {
+        // Cari data berdasarkan ID
+        $mapel = mapel::findOrFail($id);
+
+        // Hapus data
+        $mapel->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('mapel.index')->with('deleted', 'Data berhasil dihapus!');
+    }
 }

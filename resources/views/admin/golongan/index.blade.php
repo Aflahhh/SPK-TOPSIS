@@ -119,7 +119,7 @@
                         <h5 class="modal-title" id="hapusModalLabel">Hapus Data Golongan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ url('master/golongan/hapus/' . $data->id) }}" method="POST">
+                    <form action="{{ url('masterData/golongan/hapus/' . $data->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <div class="modal-body">

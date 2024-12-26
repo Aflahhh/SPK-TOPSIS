@@ -33,37 +33,58 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
 //------------------------------------ MASTER DATA --------------------------------//
-// Jabatan
-Route::get('/master/jabatan', [JabatanController::class, 'index'])->name('jabatan.index'); // Tampilkan semua data jabatan
-Route::post('/master/jabatan', [JabatanController::class, 'create'])->name('jabatan.tambah'); // Simpan data jabatan baru
-Route::put('/master/jabatan/edit/{id}', [JabatanController::class, 'update'])->name('jabatan.edit'); // Perbarui data jabatan
-Route::delete('/master/jabatan/hapus/{id}', [JabatanController::class, 'destroy'])->name('jabatan.hapus'); // Hapus data jabatan
 
-// Golongan
-Route::get('/master/golongan', [GolonganController::class, 'index'])->name('golongan.index'); // Tampilkan semua data golongan
-Route::post('/master/golongan', [GolonganController::class, 'create'])->name('golongan.tambah'); // Simpan data golongan baru
-Route::put('/master/golongan/edit/{id}', [GolonganController::class, 'update'])->name('golongan.edit'); // Perbarui data golongan
-Route::delete('/master/golongan/hapus/{id}', [GolonganController::class, 'destroy'])->name('golongan.hapus'); // Hapus data jabatan
+//------------------------------------ MASTER DATA PEGAWAI --------------------------------//
+Route::prefix('masterPegawai')->group(function () {
+    // Data Pegawai
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::post('/pegawai', [PegawaiController::class, 'create'])->name('pegawai.tambah');
+    Route::get('/pegawai/addData', [PegawaiController::class, 'addData'])->name('pegawai.addData');
+    Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/edit/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/hapus/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.hapus');
+    Route::get('/pegawai/profile/{id}', [PegawaiController::class, 'profile'])->name('profile.pegawai'); //tampil halaman profile
+
+    Route::get('/pendidikan', [PegawaiController::class, 'pendidikan'])->name('pendidikan.index');
+    Route::post('/pendidikan', [PegawaiController::class, 'tambah'])->name('pendidikan.tambah');       // Menyimpan pendidikan baru
+    Route::put('/pendidikan/{id}', [PegawaiController::class, 'editPendidikan'])->name('pendidikan.edit');   // Mengupdate pendidikan
+    Route::delete('/pendidikan/{id}', [PegawaiController::class, 'hapusPendidikan'])->name('pendidikan.hapus'); // Menghapus pendidikan
+});
+
+// Rute CRUD untuk status_jabatan
+Route::prefix('masterData')->group(function () {
+    // Jabatan
+    Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index'); // Tampilkan semua data jabatan
+    Route::post('/jabatan', [JabatanController::class, 'create'])->name('jabatan.tambah'); // Simpan data jabatan baru
+    Route::put('/jabatan/edit/{id}', [JabatanController::class, 'update'])->name('jabatan.edit'); // Perbarui data jabatan
+    Route::delete('/jabatan/hapus/{id}', [JabatanController::class, 'destroy'])->name('jabatan.hapus'); // Hapus data jabatan
+
+    // status_jabatan
+    Route::get('/status_jabatan', [JabatanController::class, 'indexStatus'])->name('status_jabatan.index');
+    // Menyimpan data baru
+    Route::post('/status_jabatan', [JabatanController::class, 'storeStatus'])->name('status_jabatan.store');
+    // Menampilkan form edit (untuk modal, data dikirim via controller)
+    Route::get('/status_jabatan/{id}/edit', [JabatanController::class, 'editStatus'])->name('status_jabatan.edit');
+    // Memperbarui data
+    Route::put('/status_jabatan/{id}', [JabatanController::class, 'updateStatus'])->name('status_jabatan.update');
+    // Menghapus data
+    Route::delete('/status_jabatan/{id}', [JabatanController::class, 'destroyStatus'])->name('status_jabatan.destroy');
+
+    // Golongan
+    Route::get('/golongan', [GolonganController::class, 'index'])->name('golongan.index'); // Tampilkan semua data golongan
+    Route::post('/golongan', [GolonganController::class, 'create'])->name('golongan.tambah'); // Simpan data golongan baru
+    Route::put('/golongan/edit/{id}', [GolonganController::class, 'update'])->name('golongan.edit'); // Perbarui data golongan
+    Route::delete('/golongan/hapus/{id}', [GolonganController::class, 'destroy'])->name('golongan.hapus'); // Hapus data golongan
+
+    // Mapel
+    Route::get('/mapel', [MapelController::class, 'index'])->name('mapel.index'); // Menampilkan data
+    Route::post('/mapel', [MapelController::class, 'store'])->name('mapel.tambah'); // Tambah data
+    Route::put('/mapel/{id}', [MapelController::class, 'update'])->name('mapel.edit'); // Edit data
+    Route::delete('/mapel/{id}', [MapelController::class, 'destroy'])->name('mapel.hapus'); // Hapus data
+});
 
 
-// Mapel
-Route::get('/master/mapel', [MapelController::class, 'index'])->name('mapel.index'); // Tampilkan semua data mapel
-Route::post('/master/mapel', [MapelController::class, 'create'])->name('mapel.tambah'); // Simpan data mapel baru
-Route::put('/master/mapel/edit/{id}', [MapelController::class, 'update'])->name('mapel.edit'); // Perbarui data mapel
-Route::delete('/master/mapel/hapus/{id}', [MapelController::class, 'destroy'])->name('mapel.hapus'); // Hapus data jabatan
 
-
-
-
-//------------------------------------ DATA PEGAWAI --------------------------------//
-// Data Pegawai
-Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-Route::post('/pegawai', [PegawaiController::class, 'create'])->name('pegawai.tambah');
-Route::get('/pegawai/addData', [PegawaiController::class, 'addData'])->name('pegawai.addData');
-Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-Route::put('/pegawai/edit/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
-Route::delete('/pegawai/hapus/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.hapus');
-Route::get('/pegawai/profile/{id}', [PegawaiController::class, 'profile'])->name('profile.pegawai'); //tampil halaman profile
 
 // Region
 Route::get('/create/getkab', [PegawaiController::class, 'getkab'])->name('create.getkab');
@@ -76,16 +97,12 @@ Route::get('/sertifikasi/addData', [SertifikasiController::class, 'addData'])->n
 Route::post('/sertifikasi/tambah', [SertifikasiController::class, 'create'])->name('sertifikasi.tambah'); // Simpan data kriteria baru
 Route::get('/sertifikasi/fetch-pegawai', [SertifikasiController::class, 'fetchPegawai'])->name('sertifikasi.fetchPegawai');
 
-
-
 //------------------------------------ DATA PENSIUN --------------------------------//
 // Pensiun
 Route::get('/pensiun', [PensiunController::class, 'index'])->name('pensiun.index');
 Route::post('/pensiun/tambah', [PensiunController::class, 'create'])->name('pensiun.tambah');
 Route::put('/pensiun/edit/{id}', [PensiunController::class, 'update'])->name('pensiun.edit');
 Route::delete('/pensiun/hapus/{id}', [PensiunController::class, 'destroy'])->name('pensiun.hapus');
-
-
 
 
 //------------------------------------ PENILAIAN KINERJA --------------------------------//
@@ -111,6 +128,8 @@ Route::post('/kinerja/penilaian/savePenilaianKinerja', [PenilaianController::cla
 // Perhitungan Topsis
 Route::get('/kinerja/penilaian/calculate-topsis/{nip}', [TopsisController::class, 'calculateTopsis'])->name('penilaian.topsis');
 Route::get('/penilaian/hasil/{penilaian_id}', [PenilaianController::class, 'hasil'])->name('penilaian.hasil');
+
+
 // Route::get('/penilaian/{pegawaiId}', [NilaiController::class, 'showPenilaian'])->name('penilaian.show'); // Menampilkan form penilaian untuk pegawai tertentu
 // Route::post('/nilai-alternatif/store', [NilaiController::class, 'store'])->name('nilai-alternatif.store'); // Menyimpan nilai penilaian
 // Route::get('/nilai-alternatif/{pegawaiId}', [NilaiController::class, 'showNilai'])->name('nilai-alternatif.show'); // Menampilkan nilai alternatif untuk pegawai tertentu

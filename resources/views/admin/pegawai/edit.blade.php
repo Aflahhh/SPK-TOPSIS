@@ -198,17 +198,15 @@
                             </select>
                         </div>
                     </div>
-
                     <!-- Tanggal Masuk -->
                     <div class="row mb-3">
                         <label for="tgl_masuk" class="col-sm-3 col-form-label" style="color: black;">Tanggal
                             Masuk</label>
                         <div class="col-sm-9">
-                            <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk"
-                                value="{{ $pegawai->tgl_masuk }}" required>
+                            <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control"
+                                value="{{ optional($pegawai->tgl_masuk)->format('Y-m-d') }}">
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <label for="tgl_keluar" class="col-sm-3 col-form-label" style="color: black;">Tanggal
                             Keluar</label>
@@ -246,14 +244,13 @@
                         <label for="status_jabatan" class="col-sm-3 col-form-label" style="color: black;">Status jabatan
                             <span style="color: red;">*</span></label>
                         <div class="col-sm-9">
-                            <select class="form-control mt-2 mb-2" name="status_jabatan" id="status_jabatan" required>
-                                <option value="">Pilih Status Jabatan</option>
-                                <option value="GTT" {{ $pegawai->status_jabatan == 'GTT' ? 'selected' : '' }}>Guru
-                                    Tidak Tetap</option>
-                                <option value="GTY" {{ $pegawai->status_jabatan == 'GTY' ? 'selected' : '' }}>Guru
-                                    Tetap Yayasan</option>
-                                <option value="DPK" {{ $pegawai->status_jabatan == 'DPK' ? 'selected' : '' }}>
-                                    Diperhitungkan</option>
+                            <select class="form-control mt-2 mb-2" name="status_jabatan_id" id="status_jabatan_id"
+                                required>
+                                @foreach ($status_jabatan as $data)
+                                    <option value="{{ $data->id }}"
+                                        {{ $pegawai->status_jabatan_id == $data->id ? 'selected' : '' }}>
+                                        {{ $data->status_jabatan }}</option>
+                                @endforeach
                             </select>
 
                         </div>
@@ -339,37 +336,8 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <script>
-                    // Function to add a new row
-                    document.getElementById('add-row').addEventListener('click', function() {
-                        var table = document.getElementById('education-history');
-                        var newRow = `
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-row">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                            <td><input type="text" class="form-control" name="pendidikan_masuk[]" placeholder="" required></td>
-                            <td><input type="text" class="form-control" name="pendidikan_keluar[]" placeholder="" required></td>
-                            <td><input type="text" class="form-control" name="nama_sekolah[]" placeholder="" required></td>
-                            <td><input type="text" class="form-control" name="pendidikan_jurusan[]" placeholder="" required></td>
-                        </tr>
-                    `;
-                        table.insertAdjacentHTML('beforeend', newRow);
-                    });
-
-                    // Function to remove a row
-                    document.addEventListener('click', function(e) {
-                        if (e.target && e.target.closest('.remove-row')) {
-                            e.target.closest('tr').remove();
-                        }
-                    });
-                </script>
             </div>
         </div>
-
 
         {{-- Riwayat Pekerjaan --}}
         <div class="card rounded-4">
@@ -424,113 +392,6 @@
                     </tbody>
                 </table>
 
-                {{-- Function to add a new row for job history --}}
-                <script>
-                    document.getElementById('add-job-row').addEventListener('click', function() {
-                        var table = document.getElementById('job-history'); // Pastikan ID sesuai
-                        var newRow = `
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-job-row">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="pekerjaan_masuk[]" placeholder="" required>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="pekerjaan_keluar[]" placeholder="">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="nama_perusahaan[]" placeholder="" required>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="posisi[]" placeholder="" required>
-                            </td>
-                        </tr>
-                    `;
-                        table.insertAdjacentHTML('beforeend', newRow);
-                    });
-                    // Function to remove a job row
-                    document.addEventListener('click', function(e) {
-                        if (e.target && e.target.closest('.remove-job-row')) {
-                            e.target.closest('tr').remove();
-                        }
-                    });
-
-                    // Function to preview the uploaded image
-                    function previewImage(event) {
-                        const image = document.getElementById('profile-image');
-                        const file = event.target.files[0];
-
-                        if (file) {
-                            // Validate file size (Max 1 MB)
-                            if (file.size > 1048576) { // 1 MB = 1048576 bytes
-                                alert('File size must not exceed 1 MB.');
-                                event.target.value = ""; // Reset file input
-                                return;
-                            }
-
-                            // Update image preview
-                            image.src = URL.createObjectURL(file);
-                            image.onload = () => {
-                                URL.revokeObjectURL(image.src); // Free up memory
-                            };
-                        }
-                    }
-
-                    // Function to reset the image preview to default
-                    function resetImage() {
-                        const image = document.getElementById('profile-image');
-                        const inputFile = document.getElementById('upload');
-
-                        // Reset the file input
-                        inputFile.value = "";
-
-                        // Set image back to default or existing photo
-                        image.src = "{{ asset('storage/' . $pegawai->foto) }}" || 'assets/img/pp.jpg';
-                    }
-
-
-                    function calculateExitDate() {
-                        const ttl = document.getElementById('ttl').value; // Ambil nilai dari input dengan id "ttl"
-                        if (ttl) {
-                            // Pisahkan tempat dan tanggal menggunakan ", "
-                            const [tempat, tanggal] = ttl.split(', ');
-
-                            // Parsing tanggal lahir
-                            const birthDate = new Date(tanggal);
-
-                            if (!isNaN(birthDate)) { // Pastikan tanggal valid
-                                // Tambahkan 60 tahun untuk menghitung tanggal pensiun
-                                birthDate.setFullYear(birthDate.getFullYear() + 60);
-
-                                // Format tanggal menjadi "YYYY-MM-DD"
-                                const exitDate = birthDate.toISOString().split('T')[0];
-
-                                // Set nilai ke input dengan id "tgl_keluar"
-                                document.getElementById('tgl_keluar').value = exitDate;
-                            } else {
-                                console.error('Format tanggal pada TTL tidak valid.');
-                            }
-                        }
-                    }
-
-
-                    window.onload = function() {
-                        // Automatically populate tgl_masuk with today's date if it's empty
-                        const tglMasukField = document.getElementById('tgl_masuk');
-                        if (!tglMasukField.value) {
-                            tglMasukField.value = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
-                        }
-
-                        // Trigger the calculation of the retirement date if ttl exists
-                        const ttlField = document.getElementById('ttl');
-                        if (ttlField.value) {
-                            calculateExitDate();
-                        }
-                    }
-                </script>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
                     $(document).ready(function() {
@@ -553,7 +414,139 @@
             <a href="{{ route('pegawai.index') }}" class="btn btn-secondary me-2">Batal</a>
             <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
-
     </form>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Add a new row for education history
+            $('#add-row').on('click', function() {
+                $('#education-history').append(`
+                    <tr>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-trash"></i></button></td>
+                        <td><input type="text" class="form-control" name="pendidikan_masuk[]" required></td>
+                        <td><input type="text" class="form-control" name="pendidikan_keluar[]" required></td>
+                        <td><input type="text" class="form-control" name="nama_sekolah[]" required></td>
+                        <td><input type="text" class="form-control" name="pendidikan_jurusan[]" required></td>
+                    </tr>
+                `);
+            });
+
+            // Remove a row for education history
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Add a new row for job history
+            $('#add-job-row').on('click', function() {
+                $('#job-history').append(`
+                    <tr>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-job-row"><i class="bi bi-trash"></i></button></td>
+                        <td><input type="text" class="form-control" name="pekerjaan_masuk[]" required></td>
+                        <td><input type="text" class="form-control" name="pekerjaan_keluar[]"></td>
+                        <td><input type="text" class="form-control" name="nama_perusahaan[]" required></td>
+                        <td><input type="text" class="form-control" name="posisi[]" required></td>
+                    </tr>
+                `);
+            });
+
+            // Remove a row for job history
+            $(document).on('click', '.remove-job-row', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Event handler ketika provinsi dipilih
+            $('#prov_id').on('change', function() {
+                let prov_id = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('create.getkab') }}",
+                    data: {
+                        prov_id: prov_id
+                    },
+                    success: function(response) {
+                        let kabOptions = "<option value=''>Pilih Kabupaten</option>";
+                        response.forEach(function(kab) {
+                            kabOptions +=
+                                `<option value="${kab.id}">${kab.name}</option>`;
+                        });
+                        $('#kab_id').html(kabOptions); // Isi dropdown kabupaten
+                        $('#kec_id').html(
+                            '<option value="">Pilih Kecamatan</option>'
+                        ); // Kosongkan kecamatan
+                        $('#desa_id').html(
+                            '<option value="">Pilih Desa</option>'); // Kosongkan desa
+                    }
+                });
+            });
+
+            // Event handler ketika kabupaten dipilih
+            $('#kab_id').on('change', function() {
+                let kab_id = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('create.getkec') }}",
+                    data: {
+                        kab_id: kab_id
+                    },
+                    success: function(response) {
+                        let kecOptions = "<option value=''>Pilih Kecamatan</option>";
+                        response.forEach(function(kec) {
+                            kecOptions +=
+                                `<option value="${kec.id}">${kec.name}</option>`;
+                        });
+                        $('#kec_id').html(kecOptions); // Isi dropdown kecamatan
+                        $('#desa_id').html(
+                            '<option value="">Pilih Desa</option>'); // Kosongkan desa
+                    }
+                });
+            });
+
+            // Event handler ketika kecamatan dipilih
+            $('#kec_id').on('change', function() {
+                let kec_id = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('create.getdesa') }}",
+                    data: {
+                        kec_id: kec_id
+                    },
+                    success: function(response) {
+                        let desaOptions = "<option value=''>Pilih Desa</option>";
+                        response.forEach(function(desa) {
+                            desaOptions +=
+                                `<option value="${desa.id}">${desa.name}</option>`;
+                        });
+                        $('#desa_id').html(desaOptions); // Isi dropdown desa
+                    }
+                });
+            });
+
+            // Update hidden ttl field when tempat or tanggal_lahir changes
+            $('#tempat, #tanggal_lahir').on('change', function() {
+                const tempat = $('#tempat').val();
+                const tanggal = $('#tanggal_lahir').val();
+                if (tempat && tanggal) {
+                    $('#ttl').val(`${tempat}, ${tanggal}`);
+                }
+            });
+
+            // Calculate exit date based on ttl
+            function calculateExitDate() {
+                const ttl = $('#ttl').val();
+                if (ttl) {
+                    const [tempat, tanggal] = ttl.split(', ');
+                    const birthDate = new Date(tanggal);
+                    if (!isNaN(birthDate)) {
+                        birthDate.setFullYear(birthDate.getFullYear() + 60);
+                        $('#tgl_keluar').val(birthDate.toISOString().split('T')[0]);
+                    }
+                }
+            }
+
+            if ($('#ttl').val()) {
+                calculateExitDate();
+            }
+        });
+    </script>
 @endsection

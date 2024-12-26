@@ -2,32 +2,34 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>@yield('title', 'Sistem Kepegawaian')</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+    <title>@yield('title', 'Sistem Kepegawaian')</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
 
-  <!-- Favicons -->
-  <link href="{{ asset('img/favicon.png') }}" rel="icon">
-  <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <!-- Favicons -->
+    <link href="{{ asset('img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 
 
-  <!-- ======= CSS ======= -->
-  @include('admin.layout.partials.css')
+    <!-- ======= CSS ======= -->
+    @include('admin.layout.partials.css')
 
 </head>
 
 <body>
 
-  <!-- ======= Header ======= -->
-  @include('admin.layout.partials.header')
-  {{-- <header id="header" class="header fixed-top d-flex align-items-center">
+    <!-- ======= Header ======= -->
+    @include('admin.layout.partials.header')
+    {{-- <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
@@ -255,9 +257,9 @@
 
   </header><!-- End Header --> --}}
 
-  <!-- ======= Sidebar ======= -->
-  @include('admin.layout.partials.sidebar')
-  {{-- <aside id="sidebar" class="sidebar">
+    <!-- ======= Sidebar ======= -->
+    @include('admin.layout.partials.sidebar')
+    {{-- <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
@@ -493,11 +495,11 @@
 
   </aside><!-- End Sidebar--> --}}
 
-  <main id="main" class="main">
-    @yield('content')
-  </main>
-  
-  {{-- <main id="main" class="main">
+    <main id="main" class="main">
+        @yield('content')
+    </main>
+
+    {{-- <main id="main" class="main">
 
     <div class="pagetitle">
       <h1>Dashboard</h1>
@@ -1145,9 +1147,9 @@
 
   </main><!-- End #main --> --}}
 
-  <!-- ======= Footer ======= -->
-  @include('admin.layout.partials.footer')
-  {{-- <footer id="footer" class="footer">
+    <!-- ======= Footer ======= -->
+    @include('admin.layout.partials.footer')
+    {{-- <footer id="footer" class="footer">
     <div class="copyright">
       &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
@@ -1161,21 +1163,22 @@
   </footer><!-- End Footer --> --}}
 
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
-  <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('assets/vendor/echarts/echarts.min.js') }}"></script>
-  <script src="{{ asset('assets/vendor/quill/quill.js') }}"></script>
-  <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
-  <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
-  <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
+    <!-- Vendor JS Files -->
+    <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/echarts/echarts.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/quill/quill.js') }}"></script>
+    <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
 
-  <!-- Template Main JS File -->
-  <script src="{{ asset('assets/js/snipets.js') }}"></script>
-  <script src="{{ asset('assets/js/main.js') }}"></script>
+    <!-- Template Main JS File -->
+    <script src="{{ asset('assets/js/snipets.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>
 

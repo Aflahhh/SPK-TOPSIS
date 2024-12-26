@@ -20,7 +20,7 @@ class pegawai extends Model
         'tgl_masuk',
         'tgl_keluar',
         'jabatan_id',
-        'status_jabatan',
+        'status_jabatan_id',
         'golongan_id',
         'mapel_id'
     ];
@@ -64,6 +64,12 @@ class pegawai extends Model
     {
         return $this->belongsTo(Jabatan::class, 'jabatan_id');
     }
+
+    public function statusJabatan()
+    {
+        return $this->belongsTo(StatusJabatan::class, 'status_jabatan_id');
+    }
+
 
     public function golongan()
     {

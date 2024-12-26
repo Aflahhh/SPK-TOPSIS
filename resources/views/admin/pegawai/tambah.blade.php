@@ -23,11 +23,8 @@
         </div>
     @endif
 
-
-
     <form action="{{ route('pegawai.tambah') }}" method="POST" enctype="multipart/form-data" class="d-inline">
         @csrf
-
         {{-- Identitas Pribadi --}}
         <div class="card rounded-4">
             <div class="card-header rounded-4">IDENTITAS</div>
@@ -43,7 +40,6 @@
                             <input type="text" class="form-control" id="nip" name="nip" required>
                         </div>
                     </div>
-
                     <!-- Nama Pegawai -->
                     <div class="row mb-3">
                         <label for="nama_pegawai" class="col-sm-3 col-form-label" style="color: black;">Nama Pegawai <span
@@ -61,7 +57,6 @@
                         </div>
                     </div>
 
-
                     <!-- Jenis Kelamin -->
                     <div class="row mb-3">
                         <label for="jk" class="col-sm-3 col-form-label" style="color: black;">Jenis Kelamin <span
@@ -74,7 +69,6 @@
                             </select>
                         </div>
                     </div>
-
                     <!-- Tempat, Tanggal Lahir -->
                     <div class="row mb-3">
                         <label for="tempat" class="col-sm-3 col-form-label" style="color: black;">Tempat, Tanggal Lahir
@@ -104,7 +98,6 @@
                             </select>
                         </div>
                     </div>
-
                     <!-- Kabupaten -->
                     <div class="row mb-3">
                         <label for="kab_id" class="col-sm-3 col-form-label" style="color: black;">Kabupaten <span
@@ -196,8 +189,7 @@
                             <select name="jabatan_id" id="jabatan_id" class="form-control mt-2 mb-2" required>
                                 <option value="">Pilih Jabatan</option>
                                 @foreach ($jabatan as $data)
-                                    <option value="{{ $data->id }}"
-                                        {{ old('jabatan_id') == $data->id ? 'selected' : '' }}>
+                                    <option value="{{ $data->id }}">
                                         {{ $data->nama_jabatan }}
                                     </option>
                                 @endforeach
@@ -205,14 +197,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label for="golongan_id" class="col-sm-3 col-form-label" style="color: black;">Golongan <span
-                                style="color: red;">*</span></label>
+                        <label for="status_jabatan_id" class="col-sm-3 col-form-label " style="color: black;">Status
+                            Jabatan <span style="color: red;">*</span></label>
                         <div class="col-sm-9">
-                            <select class="form-control mt-2 mb-2" name="status_jabatan" id="status_jabatan">
-                                <option value="">Pilih Status Jabatan</option>
-                                <option value="GTT">Guru Tidak Tetap</option>
-                                <option value="GTY">Guru Tetap Yayasan</option>
-                                <option value="DPK">Diperhitungkan</option>
+                            <select name="status_jabatan_id" id="status_jabatan_id" class="form-control mt-2 mb-2"
+                                required>
+                                <option value="">Pilih Jabatan</option>
+                                @foreach ($status_jabatan as $data)
+                                    <option value="{{ $data->id }}">
+                                        {{ $data->status_jabatan }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -243,7 +238,6 @@
                 </div>
             </div>
         </div>
-
 
         {{-- Riwayat Pendidikan --}}
         <div class="card rounded-4">
@@ -283,38 +277,8 @@
                     </tbody>
                 </table>
 
-                <script>
-                    // Function to add a new row
-                    document.getElementById('add-row').addEventListener('click', function() {
-                        var table = document.getElementById('education-history');
-                        var newRow = `
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-row">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                            <td><input type="text" class="form-control" name="pendidikan_masuk[]" placeholder="" required></td>
-                            <td><input type="text" class="form-control" name="pendidikan_keluar[]" placeholder="" ></td>
-                            <td><input type="text" class="form-control" name="nama_sekolah[]" placeholder="" required></td>
-                            <td><input type="text" class="form-control" name="pendidikan_jurusan[]" placeholder="" ></td>
-                        </tr>
-                    `;
-                        table.insertAdjacentHTML('beforeend', newRow);
-                    });
-
-                    // Function to remove a row
-                    document.addEventListener('click', function(e) {
-                        if (e.target && e.target.closest('.remove-row')) {
-                            e.target.closest('tr').remove();
-                        }
-                    });
-                </script>
-
-
             </div>
         </div>
-
 
         {{-- Riwayat Pekerjaan --}}
         <div class="card rounded-4">
@@ -356,42 +320,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <script>
-                    // Function to add a new row for job history
-                    document.getElementById('add-job-row').addEventListener('click', function() {
-                        var table = document.getElementById('job-history'); // Pastikan ID sesuai
-                        var newRow = `
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-job-row">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="pekerjaan_masuk[]" placeholder="" required>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="pekerjaan_keluar[]" placeholder="">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="nama_perusahaan[]" placeholder="" required>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="posisi[]" placeholder="" >
-                            </td>
-                        </tr>
-                    `;
-                        table.insertAdjacentHTML('beforeend', newRow);
-                    });
-
-                    // Function to remove a job row
-                    document.addEventListener('click', function(e) {
-                        if (e.target && e.target.closest('.remove-job-row')) {
-                            e.target.closest('tr').remove();
-                        }
-                    });
-                </script>
             </div>
         </div>
 
@@ -402,130 +330,149 @@
 
     </form>
 
-
-    <!-- JavaScript for image preview and reset -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function previewImage(event) {
-            const image = document.getElementById('profile-image');
-            image.src = URL.createObjectURL(event.target.files[0]);
-            image.onload = () => {
-                URL.revokeObjectURL(image.src); // Free up memory once the image is loaded
-            }
-        }
+        // Function to add a new row
+        $('#add-row').on('click', function() {
+            var newRow = `<tr>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-row-education">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+            <td><input type="text" class="form-control" name="pendidikan_masuk[]" placeholder="" required></td>
+            <td><input type="text" class="form-control" name="pendidikan_keluar[]" placeholder=""></td>
+            <td><input type="text" class="form-control" name="nama_sekolah[]" placeholder="" required></td>
+            <td><input type="text" class="form-control" name="pendidikan_jurusan[]" placeholder=""></td></tr>`;
+            $('#education-history').append(newRow);
+        });
 
-        function resetImage() {
-            const image = document.getElementById('profile-image');
-            const inputFile = document.getElementById('upload');
+        // remove education row
+        $(document).on('click', '.remove-row-education', function() {
+            $(this).closest('tr').remove(); // Menghapus baris terkait tombol "Hapus"
+        });
 
-            // Reset the file input and image preview to default
-            inputFile.value = "";
-            image.src = 'assets/img/pp.jpg'; // Set back to default image
-        }
+        // Function to add a new row for job history
+        $('#add-job-row').on('click', function() {
+            var newRow = `<tr>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-job-row">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="pekerjaan_masuk[]" placeholder="" required>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="pekerjaan_keluar[]" placeholder="">
+            </td>
+            <td>
+                <input type="text" class="form-control" name="nama_perusahaan[]" placeholder="" required>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="posisi[]" placeholder="">
+            </td></tr>`;
+            $('#job-history').append(newRow); // Menambahkan baris baru ke tabel dengan ID "job-history"
+        });
 
+        // Remove Job Row
+        $(document).on('click', '.remove-job-row', function() {
+            $(this).closest('tr').remove(); // Menghapus baris terkait tombol "Hapus"
+        });
+
+
+        // Calculate Exit Date
         function calculateExitDate() {
-            const ttl = document.getElementById('ttl').value; // Ambil nilai dari input dengan id "ttl"
+            const ttl = $('#ttl').val(); // Get the value of the "ttl" input
             if (ttl) {
-                // Pisahkan tempat dan tanggal menggunakan ", "
-                const [tempat, tanggal] = ttl.split(', ');
+                const [tempat, tanggal] = ttl.split(', '); // Split "Tempat, Tanggal"
+                const birthDate = new Date(tanggal); // Parse the date
 
-                // Parsing tanggal lahir
-                const birthDate = new Date(tanggal);
-
-                if (!isNaN(birthDate)) { // Pastikan tanggal valid
-                    // Tambahkan 60 tahun untuk menghitung tanggal pensiun
-                    birthDate.setFullYear(birthDate.getFullYear() + 60);
-
-                    // Format tanggal menjadi "YYYY-MM-DD"
-                    const exitDate = birthDate.toISOString().split('T')[0];
-
-                    // Set nilai ke input dengan id "tgl_keluar"
-                    document.getElementById('tgl_keluar').value = exitDate;
+                if (!isNaN(birthDate)) { // Check if the date is valid
+                    birthDate.setFullYear(birthDate.getFullYear() + 60); // Add 60 years
+                    const exitDate = birthDate.toISOString().split('T')[0]; // Format date as "YYYY-MM-DD"
+                    $('#tgl_keluar').val(exitDate); // Set the value to the "tgl_keluar" input
                 } else {
                     console.error('Format tanggal pada TTL tidak valid.');
                 }
             }
         }
-    </script>
 
 
-
-
-    {{-- Script Untuk Region --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(function() {
+        // Function to remove a job row
+        $(document).ready(function() {
             // Setup CSRF token for AJAX requests
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+        });
 
-            // Event handler ketika provinsi dipilih
-            $('#prov_id').on('change', function() {
-                let prov_id = $(this).val();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('create.getkab') }}",
-                    data: {
-                        prov_id: prov_id
-                    },
-                    success: function(response) {
-                        let kabOptions = "<option value=''>--Pilih Kabupaten--</option>";
-                        response.forEach(function(kab) {
-                            kabOptions +=
-                                `<option value="${kab.id}">${kab.name}</option>`;
-                        });
-                        $('#kab_id').html(kabOptions); // Isi dropdown kabupaten
-                        $('#kec_id').html(
-                            '<option value="">--Pilih Kecamatan--</option>'
-                        ); // Kosongkan kecamatan
-                        $('#desa_id').html(
-                            '<option value="">--Pilih Desa--</option>'); // Kosongkan desa
-                    }
-                });
+        // Event handler ketika provinsi dipilih
+        $('#prov_id').on('change', function() {
+            let prov_id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('create.getkab') }}",
+                data: {
+                    prov_id: prov_id
+                },
+                success: function(response) {
+                    let kabOptions = "<option value=''>Pilih Kabupaten</option>";
+                    response.forEach(function(kab) {
+                        kabOptions +=
+                            `<option value="${kab.id}">${kab.name}</option>`;
+                    });
+                    $('#kab_id').html(kabOptions); // Isi dropdown kabupaten
+                    $('#kec_id').html(
+                        '<option value="">Pilih Kecamatan</option>'
+                    ); // Kosongkan kecamatan
+                    $('#desa_id').html(
+                        '<option value="">Pilih Desa</option>'); // Kosongkan desa
+                }
             });
+        });
 
-            // Event handler ketika kabupaten dipilih
-            $('#kab_id').on('change', function() {
-                let kab_id = $(this).val();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('create.getkec') }}",
-                    data: {
-                        kab_id: kab_id
-                    },
-                    success: function(response) {
-                        let kecOptions = "<option value=''>--Pilih Kecamatan--</option>";
-                        response.forEach(function(kec) {
-                            kecOptions +=
-                                `<option value="${kec.id}">${kec.name}</option>`;
-                        });
-                        $('#kec_id').html(kecOptions); // Isi dropdown kecamatan
-                        $('#desa_id').html(
-                            '<option value="">--Pilih Desa--</option>'); // Kosongkan desa
-                    }
-                });
+        // Event handler ketika kabupaten dipilih
+        $('#kab_id').on('change', function() {
+            let kab_id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('create.getkec') }}",
+                data: {
+                    kab_id: kab_id
+                },
+                success: function(response) {
+                    let kecOptions = "<option value=''>Pilih Kecamatan</option>";
+                    response.forEach(function(kec) {
+                        kecOptions +=
+                            `<option value="${kec.id}">${kec.name}</option>`;
+                    });
+                    $('#kec_id').html(kecOptions); // Isi dropdown kecamatan
+                    $('#desa_id').html(
+                        '<option value="">Pilih Desa</option>'); // Kosongkan desa
+                }
             });
+        });
 
-            // Event handler ketika kecamatan dipilih
-            $('#kec_id').on('change', function() {
-                let kec_id = $(this).val();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('create.getdesa') }}",
-                    data: {
-                        kec_id: kec_id
-                    },
-                    success: function(response) {
-                        let desaOptions = "<option value=''>--Pilih Desa--</option>";
-                        response.forEach(function(desa) {
-                            desaOptions +=
-                                `<option value="${desa.id}">${desa.name}</option>`;
-                        });
-                        $('#desa_id').html(desaOptions); // Isi dropdown desa
-                    }
-                });
+        // Event handler ketika kecamatan dipilih
+        $('#kec_id').on('change', function() {
+            let kec_id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('create.getdesa') }}",
+                data: {
+                    kec_id: kec_id
+                },
+                success: function(response) {
+                    let desaOptions = "<option value=''>Pilih Desa</option>";
+                    response.forEach(function(desa) {
+                        desaOptions +=
+                            `<option value="${desa.id}">${desa.name}</option>`;
+                    });
+                    $('#desa_id').html(desaOptions); // Isi dropdown desa
+                }
             });
         });
 
