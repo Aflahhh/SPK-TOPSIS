@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class subkriteria extends Model
+class Subkriteria extends Model
 {
 
     protected $fillable = [
@@ -17,6 +17,16 @@ class subkriteria extends Model
     public function Kriteria()
     {
         return $this->belongsTo(Kriteria::class);
+    }
+
+    public function getBobot($pegawai_id){
+        $id = $this->id;
+        $cari = KriteriaPegawai::where('pegawai_id', $pegawai_id)->where('subkriteria_id', $id)->first();
+        if($cari){
+            return $cari->bobot;
+        }else{
+            return 0;
+        }
     }
 
     

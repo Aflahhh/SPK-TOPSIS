@@ -17,45 +17,46 @@ class KriteriaController extends Controller
     {
         // Validasi input
         $request->validate([
-            'kode_kriteria' => 'required',
-            'nama_kriteria' => 'required',
-            'atribut' => 'required',
-            'bobot' => 'required|',
+            'nama_kriteria' => 'required|string|max:255',
         ]);
 
         // Simpan data ke database
         Kriteria::create([
-            'kode_kriteria' => $request->kode_kriteria,
             'nama_kriteria' => $request->nama_kriteria,
-            'atribut' => $request->atribut,
-            'bobot' => $request->bobot,
         ]);
 
         // Redirect dengan pesan sukses
-        return redirect()->route('kriteria.index')->with('tambah', 'Kriteria berhasil ditambahkan!');
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil ditambahkan!');
     }
 
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'nama_kriteria' => 'required|string|max:255',
+        ]);
 
+        // Cari data kriteria berdasarkan ID dan update
+        $kriteria = Kriteria::findOrFail($id);
+        $kriteria->update([
+            'nama_kriteria' => $request->nama_kriteria,
+        ]);
+
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diubah!');
+    }
+
+    public function destroy($id)
+    {
+        // Cari data kriteria berdasarkan ID
+        $kriteria = Kriteria::findOrFail($id);
     
-    // public function edit(Kriteria $kriteria)
-    // {
-    //     return view('kriteria.edit', compact('kriteria'));
-    // }
-
-    // public function update(Request $request, Kriteria $kriteria)
-    // {
-    //     $request->validate([
-    //         'nama_kriteria' => 'required|string|max:255',
-    //         'bobot' => 'required|numeric|min:0|max:1',
-    //     ]);
-
-    //     $kriteria->update($request->all());
-    //     return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diubah!');
-    // }
-
-    // public function destroy(Kriteria $kriteria)
-    // {
-    //     $kriteria->delete();
-    //     return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil dihapus!');
-    // }
+        // Hapus semua subkriteria yang terkait dengan kriteria
+        $kriteria->subkriterias()->delete();
+    
+        // Hapus data kriteria
+        $kriteria->delete();
+    
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil dihapus!');
+    }
+    
 }

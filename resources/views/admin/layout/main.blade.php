@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon">
+    {{-- <link href="{{ asset('img/favicon.png') }}" rel="icon"> --}}
     <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -1177,7 +1177,6 @@
     <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
 
     <!-- Template Main JS File -->
-    <script src="{{ asset('assets/js/snipets.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>

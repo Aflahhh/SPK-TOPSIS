@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendidikan_terakhir', function (Blueprint $table) {
+        Schema::create('kriteria_pegawais', function (Blueprint $table) {
             $table->id();
-            $table->string('pendidikan_terakhir');
+            $table->foreignId('pegawai_id')
+            ->constrained('pegawais')
+            ->onDelete('cascade');
+            $table->foreignId('subkriteria_id')
+            ->constrained('subkriterias')
+            ->onDelete('cascade');
+            $table->decimal('bobot',5,2);
             $table->timestamps();
         });
     }
@@ -23,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendidikan_terakhir');
+        Schema::dropIfExists('kriteria_pegawais');
     }
 };

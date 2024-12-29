@@ -1,3 +1,50 @@
+<style>
+    .notification-box {
+        position: absolute;
+        top: 2.8em;
+        left: -10em;
+        width: 300px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 999;
+    }
+
+    .notification-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .title-notif {
+        padding: 15px;
+        text-align: center;
+    }
+
+    /* Custom badge styling for notifications */
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.5em 0.6em;
+        min-width: 1.5em;
+        min-height: 1.5em;
+        line-height: 1.5;
+        text-align: center;
+    }
+
+    .rounded-circle {
+        border-radius: 50%;
+    }
+</style>
+
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
@@ -17,146 +64,26 @@
                 </a>
             </li><!-- End Search Icon-->
 
-            <li class="nav-item dropdown">
-
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">4</span>
-                </a><!-- End Notification Icon -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        You have 4 new notifications
-                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="#">Show all notifications</a>
-                    </li>
-
-                </ul><!-- End Notification Dropdown Items -->
-
-            </li><!-- End Notification Nav -->
-
-            <li class="nav-item dropdown">
-
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-chat-left-text"></i>
-                    <span class="badge bg-success badge-number">3</span>
-                </a><!-- End Messages Icon -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                    <li class="dropdown-header">
-                        You have 3 new messages
-                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
-                            <div>
-                                <h4>Maria Hudson</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>4 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
-                            <div>
-                                <h4>Anna Nelson</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>6 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
-                            <div>
-                                <h4>David Muldon</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>8 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="dropdown-footer">
-                        <a href="#">Show all messages</a>
-                    </li>
-
-                </ul><!-- End Messages Dropdown Items -->
-
-            </li><!-- End Messages Nav -->
+            {{-- notif --}}
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link position-relative" id="notification-icon">
+                    <i class="bi bi-bell" style="font-size: 1.5rem;"></i>
+                    <span id="notification-count" class="badge rounded-circle position-absolute top-72 start-150 translate-middle bg-primary text-white">
+                        0
+                    </span>
+                </a>
+                <div id="notification-box" class="notification-box" style="display: none;">
+                    <p class="title-notif"><strong>Pegawai Akan Pensiun</strong></p>
+                    <hr>
+                    <div id="notification-content">
+                        <p style="text-align: center; margin: 5px;">Loading notifications...</p>
+                    </div>
+                </div>
+            </div>
+            
+            
+            {{-- end notif --}}
+            
 
             <li class="nav-item dropdown pe-3">
 
@@ -218,3 +145,69 @@
     </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Load notifications from the server
+        function loadNotifications() {
+            $.ajax({
+                url: '{{ route('notifications') }}', // Ganti URL ini sesuai endpoint Anda
+                method: 'GET',
+                success: function (response) {
+                    const notificationCount = response.count;
+                    const notificationContent = $('#notification-content');
+
+                    // Update notification count
+                    $('#notification-count').text(notificationCount);
+
+                    // Clear existing content
+                    notificationContent.empty();
+
+                    if (notificationCount > 0) {
+                        // Populate notifications
+                        $.each(response.details, function (key, detail) {
+                            const item = `
+                                <div class="notification-item">
+                                    <strong>${detail.nama_pegawai}</strong><br>
+                                    <span>${detail.jabatan}</span>
+                                </div>
+                            `;
+                            notificationContent.append(item);
+                        });
+                    } else {
+                        notificationContent.html('<p style="text-align: center; margin: 10px;">No notifications</p>');
+                    }
+                },
+                error: function () {
+                    $('#notification-content').html('<p style="text-align: center; margin: 10px;">Failed to load notifications</p>');
+                }
+            });
+        }
+
+        // Toggle notification box
+        $('#notification-icon').on('click', function (e) {
+            e.preventDefault();
+            $('#notification-box').toggle();
+        });
+
+        // Close notification box when clicking outside
+        $(document).on('click', function (e) {
+            const notificationBox = $('#notification-box');
+            const notificationIcon = $('#notification-icon');
+
+            // Check if the click is outside the notification box and icon
+            if (!notificationBox.is(e.target) && notificationBox.has(e.target).length === 0 &&
+                !notificationIcon.is(e.target) && notificationIcon.has(e.target).length === 0) {
+                notificationBox.hide();
+            }
+        });
+
+        // Load notifications on page load
+        loadNotifications();
+    });
+</script>
+
+
+
+
+

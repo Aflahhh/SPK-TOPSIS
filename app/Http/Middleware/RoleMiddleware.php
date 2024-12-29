@@ -12,13 +12,27 @@ class RoleMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $role
+     * @param  string|null  $guard
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (Auth::user()->role !== $role) {
-            return redirect()->route('other-dashboard'); // atau route lain
+        // Pastikan pengguna terautentikasi
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login untuk mengakses halaman ini.');
         }
+
+        // Ambil role pengguna
+        $userRole = Auth::user()->role;
+
+        // Periksa apakah role pengguna termasuk dalam array $roles
+        if (!in_array($userRole, $roles)) {
+            return redirect()->route('dashboard.index')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+        }
+
         return $next($request);
     }
 }

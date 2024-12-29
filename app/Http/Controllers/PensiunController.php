@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pensiun;
+use Carbon\Carbon;
 use App\Models\Jabatan;
-use App\Models\Golongan;
 use App\Models\Pegawai;
+use App\Models\Pensiun;
+use App\Models\Golongan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -13,13 +14,61 @@ class PensiunController extends Controller
 {
     public function index()
     {
-        $pensiun = Pensiun::with('pegawai', 'jabatan', 'golongan')->get();
-        $jabatan = Jabatan::all();
-        $golongan = Golongan::all();
-        $pegawai = Pegawai::all();
+      // Ambil semua data pegawai
+      $pegawai = Pegawai::all();
 
-        return view('admin.pensiun.index', compact('pensiun', 'jabatan', 'golongan', 'pegawai'));
+      // Tambahkan informasi umur untuk setiap pegawai
+      $pegawai = $pegawai->map(function ($item) {
+          $item->umur = $this->hitungUmur($item->ttl); // Hitung umur
+          return $item;
+      });
+
+      // Filter pegawai yang hampir 60 tahun (kurang dari 12 bulan menuju 60 tahun)
+    $almost60 = $pegawai->filter(function ($item) {
+        if ($item->ttl) {
+            $ttl = explode(', ', $item->ttl); // Pisahkan tempat dan tanggal
+            $tanggalLahir = Carbon::parse($ttl[1]); // Ambil tanggal lahir
+
+            // Hitung ulang tahun ke-60
+            $ulangTahun60 = $tanggalLahir->copy()->addYears(60);
+
+            // Hitung bulan menuju ulang tahun ke-60
+            $bulanMenuju60 = Carbon::now()->diffInMonths($ulangTahun60, false);
+
+            // Filter pegawai yang kurang dari 12 bulan menuju ulang tahun ke-60
+            return $bulanMenuju60 > 0 && $bulanMenuju60 <= 12;
+        }
+        return false;
+    });
+
+    // Kirim data ke view
+    return view('admin.pensiun.index', [
+        'pegawai' => $almost60
+    ]);
+
     }
+
+
+    public function hitungUmur($ttl)
+    {
+        if ($ttl) {
+            // Pisahkan tempat dan tanggal dari ttl
+            $data = explode(', ', $ttl);
+
+            // Pastikan array memiliki elemen kedua (tanggal lahir)
+            if (isset($data[1]) && Carbon::hasFormat($data[1], 'Y-m-d')) {
+                $tanggalLahir = Carbon::parse($data[1]); // Parsing tanggal lahir
+
+                // Hitung umur dan pastikan hasilnya integer (dibulatkan ke bawah)
+                $umur = Carbon::now()->diffInYears($tanggalLahir);
+
+                return $umur . ' tahun';
+            }
+        }
+
+            return 'Tidak Valid'; // Jika TTL kosong atau format salah
+    }
+
 
     public function fetchPegawai($nip)
     {

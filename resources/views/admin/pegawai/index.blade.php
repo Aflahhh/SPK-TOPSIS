@@ -23,29 +23,10 @@
         </div>
     @endif
 
-
     <div class="card rounded-4" style="height: 90px">
         <div class="card-body mt-2">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="card-title" style="font-size: 24px;">Data Pegawai</h5>
-                <div class="dropdown">
-                    <div>
-                        <select id="filter" class="form-select form-select-sm" style="width: auto;"
-                            onchange="applyFilter()">
-                            <option value="notAlmost60" {{ request()->get('filter') == 'notAlmost60' ? 'selected' : '' }}>
-                                Pegawai ({{ $notAlmost60Count }})
-                            </option>
-                            <option value="almost60" {{ request()->get('filter') == 'almost60' ? 'selected' : '' }}>
-                                Umur Hampir 60 Tahun ({{ $almost60Count }})
-                            </option>
-                        </select>
-                    </div>
-                    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('pegawai.index') }}">Semua Pegawai</a>
-                        </li>
-                    </ul>
-                </div>
                 <button type="button" class="btn btn-primary ms-2"
                     onclick="window.location.href='{{ route('pegawai.addData') }}'">Tambah Pegawai</i>
                 </button>
@@ -67,7 +48,7 @@
                     <div class="modal-body">
                         <i>Apakah Anda Yakin Ingin Menghapus Data Pegawai {{ $data->nama_pegawai }}?</i>
                     </div>
-                    <form action="{{ url('masterPegawai/pegawai/hapus/' . $data->id) }}" method="POST">
+                    <form action="{{ url('masterPegawai/hapus/' . $data->id) }}" method="POST">
                         @method('DELETE')
                         @csrf
                         <div class="modal-footer">
@@ -91,7 +72,7 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>NUPTK</th>
-                            <th>NIP</th>
+                            <th>NBM</th>
                             <th>Alamat</th>
                             <th>No HP</th>
                             <th><b>Aksi</b></th>
@@ -99,12 +80,12 @@
                     </thead>
                     <tbody>
                         @php $no = 0; @endphp
-                        @foreach ($filteredPegawai as $data)
+                        @foreach ($pegawai as $data)
                             <tr>
                                 <td>{{ ++$no }}</td>
                                 <td>{{ $data->nama_pegawai }}</td>
                                 <td>{{ $data->nuptk }}</td>
-                                <td>{{ $data->nip }}</td>
+                                <td>{{ $data->nbm }}</td>
                                 <td>{{ $data->alamat }}</td>
                                 <td>{{ $data->no_hp }}</td>
                                 <td>

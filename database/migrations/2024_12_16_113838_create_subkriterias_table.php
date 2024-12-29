@@ -14,14 +14,11 @@ return new class extends Migration
         Schema::create('subkriterias', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kriteria_id')
-            ->constrained()
+            ->constrained('kriterias')
             ->onDelete('cascade');
-            $table->string('kode_kriteria')->nullable(); 
             $table->string('nama_subkriteria'); 
-            $table->decimal('bobot', 5, 2); 
+            $table->enum('fungsi', ['cost', 'benefit']); 
             $table->timestamps();          
-
-
         });
     }
 

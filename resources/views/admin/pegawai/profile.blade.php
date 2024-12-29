@@ -6,7 +6,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('pegawai.index') }}">Data Pegawai</a></li>
-                <li class="breadcrumb-item">Profil</li>
+                <li class="breadcrumb-item active">Profil</li>
             </ol>
         </nav>
     </div>
@@ -20,6 +20,7 @@
                         <div class="tab-pane fade show active profile-overview" id="profile-overview">
                             <h5 class="card-title"></h5>
 
+                            <!-- Identitas Diri -->
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label ">Nama Lengkap</div>
                                 <div class="col-lg-8 col-md-7">{{ $data->nama_pegawai }}</div>
@@ -29,8 +30,12 @@
                                 <div class="col-lg-8 col-md-7">{{ $data->nuptk }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">NIP</div>
-                                <div class="col-lg-8 col-md-7">{{ $data->nip }}</div>
+                                <div class="col-lg-4 col-md-5 label">NBM</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->nbm }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 label">Alamat</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->alamat }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Tempat, Tanggal Lahir</div>
@@ -46,191 +51,82 @@
                                     {{ $tempat }}, {{ $formattedTanggal }}
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Jenis Kelamin</div>
                                 <div class="col-lg-8 col-md-7">{{ $data->jk }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 label">Status Perkawinan</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->status_perkawinan }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">No HP</div>
                                 <div class="col-lg-8 col-md-7">{{ $data->no_hp }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Alamat</div>
-                                <div class="col-lg-8 col-md-7">{{ $data->alamat }}</div>
+                                <div class="col-lg-4 col-md-5 label">Pendidikan Terakhir</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->pendidikan_terakhir }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Provinsi</div>
-                                <div class="col-lg-8 col-md-7"><select class="form-control" id="prov_id" name="prov_id"
-                                        disabled>
-                                        @foreach ($provinces as $prov)
-                                            <option value="{{ $prov->id }}"
-                                                {{ $data->prov_id == $prov->id ? 'selected' : '' }}>{{ $prov->name }}
-                                            </option>
-                                        @endforeach
-                                    </select></div>
+                                <div class="col-lg-4 col-md-5 label">Jurusan</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->jurusan }}</div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Kabupaten</div>
-                                <div class="col-lg-8 col-md-7"><select class="form-control" id="prov_id" name="prov_id"
-                                        disabled>
-                                        @foreach ($kabupaten as $kab)
-                                            <option value="{{ $kab->id }}"
-                                                {{ $data->kab_id == $kab->id ? 'selected' : '' }}>{{ $kab->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Kecamatan</div>
-                                <div class="col-lg-8 col-md-7">
-                                    <select class="form-control" id="kec_id" name="kec_id" disabled>
-                                        @foreach ($kecamatan as $kec)
-                                            <option value="{{ $kec->id }}"
-                                                {{ $data->kec_id == $kec->id ? 'selected' : '' }}>{{ $kec->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Desa</div>
-                                <div class="col-lg-8 col-md-7">
-                                    <select class="form-control" id="desa_id" name="desa_id" disabled>
-                                        @foreach ($desa as $d)
-                                            <option value="{{ $d->id }}"
-                                                {{ $data->desa_id == $d->id ? 'selected' : '' }}>{{ $d->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Alamat</div>
-                                <div class="col-lg-8 col-md-7">{{ $data->alamat }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Riwayat Pendidikan</div>
-                                <div class="col-lg-8 col-md-7">
-                                    @forelse($data->pendidikan as $pendidikan)
-                                        <div>{{ $pendidikan->nama_sekolah }} / {{ $pendidikan->pendidikan_jurusan }}
-                                            ({{ $pendidikan->pendidikan_masuk }} -
-                                            {{ $pendidikan->pendidikan_keluar }})
-                                        </div>
-                                    @empty
-                                        <div>- Tidak ada riwayat pendidikan</div>
-                                    @endforelse
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Riwayat Pekerjaan</div>
-                                <div class="col-lg-8 col-md-7">
-                                    @forelse($pekerjaan->pekerjaan as $pekerjaan)
-                                        <div>{{ $pekerjaan->nama_perusahaan }} / {{ $pekerjaan->posisi }}
-                                            ({{ $pekerjaan->pekerjaan_masuk }} - {{ $pekerjaan->pekerjaan_keluar }})
-                                        </div>
-                                    @empty
-                                        <div>- Tidak ada riwayat pekerjaan</div>
-                                    @endforelse
-                                </div>
-                            </div>
+
+                            <!-- Jabatan dan Sertifikasi -->
+                            <h5 class="card-title mt-4">Jabatan dan Sertifikasi</h5>
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Jabatan</div>
-                                <div class="col-lg-8 col-md-7">
-                                    {{ $data->jabatan->nama_jabatan ?? 'Tidak ada jabatan' }}
-                                </div>
+                                <div class="col-lg-8 col-md-7">{{ $data->jabatan->nama_jabatan ?? '-' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Status Jabatan</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->statusJabatan->status_jabatan ?? '-' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 label">Status Karyawan</div>
                                 <div class="col-lg-8 col-md-7">
-                                    @if ($data->statusJabatan)
-                                        {{ $data->statusJabatan->status_jabatan }}
-                                    @else
-                                        -
-                                    @endif
-
+                                    {{ $data->status_karyawan === 'K' ? 'Karyawan' : ($data->status_karyawan === 'TK' ? 'Tidak Karyawan' : '-') }}
                                 </div>
                             </div>
-
+                            
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 label">Golongan</div>
-                                <div class="col-lg-8 col-md-7">{{ $data->golongan->golongan ?? 'Tidak ada golongan' }}
-                                </div>
+                                <div class="col-lg-8 col-md-7">{{ $data->golongan->golongan ?? '-' }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Mapel</div>
-                                </label>
-                                <div class="col-lg-8 col-md-7">
-                                    @forelse ($mapel as $data)
-                                        <div>{{ $data->mapel }}</div>
-                                    @empty
-                                        <div>- Tidak ada mata pelajaran</div>
-                                    @endforelse
-                                </div>
+                                <div class="col-lg-4 col-md-5 label">Mata Pelajaran</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->mapel->mapel ?? '-' }}</div>
                             </div>
-
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Tanggal Masuk</div>
-                                <div class="col-lg-8 col-md-7">
-                                    {{ formatTanggalIndo($tgl_masuk) }}
-                                </div>
+                                <div class="col-lg-4 col-md-5 label">Tahun Sertifikasi</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->tahun_sertifikasi ?? '-' }}</div>
                             </div>
-
                             <div class="row">
-                                <div class="col-lg-4 col-md-5 label">Tanggal Pensiun</div>
-                                <div class="col-lg-8 col-md-7">
-                                    {{ formatTanggalIndo($pensiun) }}
-                                </div>
+                                <div class="col-lg-4 col-md-5 label">Tempat Sertifikasi</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->tempat_sertifikasi ?? '-' }}</div>
                             </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 label">Mengajar di Sekolah Lain</div>
+                                <div class="col-lg-8 col-md-7">{{ $data->mengajar_sekolah_lain }}</div>
+                            </div>
+                            @if ($data->mengajar_sekolah_lain === 'Ya')
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-5 label">Nama Sekolah Lain</div>
+                                    <div class="col-lg-8 col-md-7">{{ $data->sekolah_lain }}</div>
+                                </div>
+                            @endif
 
-
-
+                            <!-- Tanggal Masuk dan Pensiun -->
+                            <h5 class="card-title mt-4">Pensiun</h5>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-5 label">Tanggal</div>
+                                <div class="col-lg-8 col-md-7"> {{ \Carbon\Carbon::parse($data->tgl_purna)->translatedFormat('d F Y') }}</div>
+                            </div>
                         </div>
 
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </section>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Ambil nilai TTL dari input hidden
-            const ttl = $("#ttl").val();
-
-            if (ttl) {
-                // Pisahkan string berdasarkan ", "
-                const [tempat, tanggal] = ttl.split(", "); // tempat = "Kudus", tanggal = "2000-02-10"
-
-                // Parsing tanggal
-                const date = new Date(tanggal);
-
-                // Tambahkan 60 tahun ke tanggal
-                date.setFullYear(date.getFullYear() + 60);
-
-                // Format tanggal menjadi dd-mm-yyyy
-                const formattedDate = date.toLocaleDateString("id-ID", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                });
-
-                // Tampilkan hasil ke elemen HTML
-                $("#perkiraanPensiun").text(formattedDate);
-            }
-        });
-
-        $(document).ready(function() {
-            // Cari semua elemen dengan kelas "form-control" yang memiliki atribut "disabled"
-            $(".form-control:disabled").css({
-                background: "#fff",
-                border: "none"
-            });
-        });
-    </script>
 @endsection

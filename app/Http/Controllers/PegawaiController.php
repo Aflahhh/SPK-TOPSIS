@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\pegawai;
-use App\Models\jabatan;
-use App\Models\golongan;
+use Carbon\Carbon;
 use App\Models\mapel;
+use App\Models\jabatan;
+use App\Models\pegawai;
+use App\Models\Regency;
+use App\Models\Village;
+use App\Models\District;
+use App\Models\golongan;
+use App\Models\Province;
 use App\Models\pekerjaan;
 use App\Models\pendidikan;
-use App\Models\Province;
-use App\Models\Regency;
-use App\Models\District;
-use App\Models\PendidikanTerakhir;
-use App\Models\StatusJabatan;
-use App\Models\Village;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\StatusJabatan;
+use Illuminate\Http\JsonResponse;
+use App\Models\PendidikanTerakhir;
 
 class PegawaiController extends Controller
 {
@@ -24,43 +25,62 @@ class PegawaiController extends Controller
     {
         // Ambil semua data pegawai
         $pegawai = Pegawai::all();
-
-        // Filter pegawai yang hampir 60 tahun (kurang dari 12 bulan menuju 60 tahun)
-        $almost60 = $pegawai->filter(function ($item) {
-            if ($item->ttl) {
-                $ttl = explode(', ', $item->ttl); // Pisahkan tempat dan tanggal
-                $tanggalLahir = Carbon::parse($ttl[1]); // Ambil tanggal lahir
-
-                // Hitung ulang tahun ke-60
-                $ulangTahun60 = $tanggalLahir->copy()->addYears(60);
-
-                // Hitung bulan menuju ulang tahun ke-60
-                $bulanMenuju60 = Carbon::now()->diffInMonths($ulangTahun60, false);
-
-                // Filter pegawai yang kurang dari 12 bulan menuju ulang tahun ke-60
-                return $bulanMenuju60 > 0 && $bulanMenuju60 <= 12;
-            }
-            return false;
-        });
-
-        // Filter pegawai yang tidak usianya hampir 60 tahun
-        $notAlmost60 = $pegawai->diff($almost60);
-
-        // Tentukan data yang akan ditampilkan berdasarkan filter
-        $filteredPegawai = $pegawai; // Default: semua pegawai
-        if ($request->get('filter') === 'notAlmost60') {
-            $filteredPegawai = $notAlmost60;
-        } elseif ($request->get('filter') === 'almost60') {
-            $filteredPegawai = $almost60;
-        }
-
+    
+        // // Filter pegawai yang hampir 60 tahun (kurang dari 12 bulan menuju 60 tahun)
+        // $almost60 = $pegawai->filter(function ($item) {
+        //     if ($item->ttl) {
+        //         $ttl = explode(', ', $item->ttl); // Pisahkan tempat dan tanggal
+        //         $tanggalLahir = Carbon::parse($ttl[1]); // Ambil tanggal lahir
+    
+        //         // Hitung ulang tahun ke-60
+        //         $ulangTahun60 = $tanggalLahir->copy()->addYears(60);
+    
+        //         // Hitung bulan menuju ulang tahun ke-60
+        //         $bulanMenuju60 = Carbon::now()->diffInMonths($ulangTahun60, false);
+    
+        //         // Filter pegawai yang kurang dari 12 bulan menuju ulang tahun ke-60
+        //         return $bulanMenuju60 > 0 && $bulanMenuju60 <= 12;
+        //     }
+        //     return false;
+        // });
+    
+        // // Filter pegawai berdasarkan status_jabatan_id == 2 dan umur >= 56
+        // $pensiun = $pegawai->filter(function ($item) {
+        //     if ($item->ttl && $item->status_jabatan_id == 2) {
+        //         $ttl = explode(', ', $item->ttl); // Pisahkan tempat dan tanggal
+        //         $tanggalLahir = Carbon::parse($ttl[1]); // Ambil tanggal lahir
+    
+        //         // Hitung umur berdasarkan tahun saja
+        //         $umur = Carbon::now()->year - $tanggalLahir->year;
+    
+        //         // Filter jika umur >= 56
+        //         return $umur >= 56;
+        //     }
+        //     return false;
+        // });
+    
+        // // Filter pegawai yang usianya tidak hampir 60 tahun
+        // $notAlmost60 = $pegawai->diff($almost60)->diff($pensiun);
+    
+        // // Tentukan data yang akan ditampilkan berdasarkan filter
+        // $filter = $request->get('filter', 'notAlmost60'); 
+        // if ($filter === 'notAlmost60') {
+        //     $filteredPegawai = $notAlmost60;
+        // } elseif ($filter === 'almost60') {
+        //     $filteredPegawai = $almost60;
+        // } elseif ($filter === 'pensiun') {
+        //     $filteredPegawai = $pensiun;
+        // }
+    
         return view('admin.pegawai.index', [
             'pegawai' => $pegawai,
-            'filteredPegawai' => $filteredPegawai,
-            'almost60Count' => $almost60->count(), // Jumlah pegawai hampir 60 tahun
-            'notAlmost60Count' => $notAlmost60->count(), // Jumlah pegawai tidak hampir 60 tahun
+            // 'filteredPegawai' => $filteredPegawai,
+            // 'almost60Count' => $almost60->count(), // Jumlah pegawai hampir 60 tahun
+            // 'notAlmost60Count' => $notAlmost60->count(), // Jumlah pegawai tidak hampir 60 tahun
+            // 'pensiunCount' => $pensiun->count(), // Jumlah pegawai status_jabatan_id == 2 dan umur >= 56
         ]);
     }
+    
 
     public function addData()
     {  // menampilkan halaman tambah data pegawai
@@ -82,115 +102,73 @@ class PegawaiController extends Controller
     }
 
     public function create(Request $request)
-    {
-        $masuk = $request->validate([
+{
+    $validator = $request->validate([
 
-            // data pegawai
-            'nuptk' => 'required',
-            'nama_pegawai' => 'required',
-            'nip' => 'required',
-            'prov_id' => 'required',
-            'kab_id' => 'required',
-            'kec_id' => 'required',
-            'desa_id' => 'required',
-            'alamat' => 'required',
-            'ttl' => 'required',
-            'jk' => 'required',
-            'no_hp' => 'required',
-            'status_perkawinan' => 'required',
-            'tgl_masuk' => 'required',
+        // data pegawai
+        'nuptk' => 'required',
+        'nama_pegawai' => 'required',
+        'nbm' => 'required',
+        'alamat' => 'required',
+        'ttl' => 'required',
+        'jk' => 'required',
+        'no_hp' => 'required',
+        'pendidikan_terakhir' => 'required',
+        'jurusan' => 'required',
+        'status_perkawinan' => 'required',
 
-            // jabatan dan golongan
-            'jabatan_id' => 'required',
-            'status_jabatan_id' => 'required',
-            'golongan_id' => 'required',
-            'mapel_id' => 'required',
+        // jabatan dan golongan
+        'jabatan_id' => 'required',
+        'status_jabatan_id' => 'required',
+        'golongan_id' => 'required',
+        'mapel_id' => 'required',
 
-            // pendidikan
-            'pendidikan_masuk' => 'required',
-            'pendidikan_masuk.*' => 'required',
-            'pendidikan_keluar' => 'nullable',
-            'pendidikan_keluar.*' => 'nullable',
-            'nama_sekolah' => 'required',
-            'nama_sekolah.*' => 'required',
-            'pendidikan_jurusan' => 'nullable',
-            'pendidikan_jurusan.*' => 'nullable',
+        // sertifikasi
+        'tahun_sertifikasi' => 'nullable|date',
+        'tempat_sertifikasi' => 'nullable|string',
+        'mengajar_sekolah_lain' => 'required|in:Ya,Tidak',
+        'sekolah_lain' => 'nullable|required_if:mengajar_sekolah_lain,Ya|string',
+    ]);
 
-            // pekerjaan
-            'pekerjaan_masuk' => 'required',
-            'pekerjaan_masuk.*' => 'required',
-            'pekerjaan_keluar' => 'nullable',
-            'pekerjaan_keluar.*' => 'nullable',
-            'nama_perusahaan' => 'required',
-            'nama_perusahaan.*' => 'required',
-            'posisi' => 'nullable',
-            'posisi.*' => 'nullable',
-        ]);
+    $pegawai = new Pegawai();
 
+    // Set data pegawai 
+    $pegawai->nuptk = $validator['nuptk'];
+    $pegawai->nama_pegawai = $validator['nama_pegawai'];
+    $pegawai->nbm = $validator['nbm'];
+    $pegawai->alamat = $validator['alamat'];
+    $pegawai->ttl = $validator['ttl'];
+    $pegawai->jk = $validator['jk'];
+    $pegawai->no_hp = $validator['no_hp'];
+    $pegawai->pendidikan_terakhir = $validator['pendidikan_terakhir'];
+    $pegawai->jurusan = $validator['jurusan'];
+    $pegawai->status_perkawinan = $validator['status_perkawinan'];
 
-        $pegawai = new Pegawai();
+    // Kalkulasi kemungkinan pensiun
+    $retirementAge = 60;
+    list($tempat, $tanggal) = explode(', ', $validator['ttl']); // Pisahkan "Tempat, Tanggal"
+    $retirementDate = Carbon::parse($tanggal)->addYears($retirementAge)->format('Y-m-d'); // Hitung pensiun
+    $pegawai->tgl_purna = $retirementDate;
 
-        // Set data pegawai 
-        $pegawai->nuptk = $masuk['nuptk'];
-        $pegawai->nama_pegawai = $masuk['nama_pegawai'];
-        $pegawai->nip = $masuk['nip'];
-        $pegawai->prov_id = $masuk['prov_id'];
-        $pegawai->kab_id = $masuk['kab_id'];
-        $pegawai->kec_id = $masuk['kec_id'];
-        $pegawai->desa_id = $masuk['desa_id'];
-        $pegawai->alamat = $masuk['alamat'];
-        $pegawai->ttl = $masuk['ttl'];
-        $pegawai->jk = $masuk['jk'];
-        $pegawai->no_hp = $masuk['no_hp'];
-        $pegawai->status_perkawinan = $masuk['status_perkawinan'];
-        $pegawai->tgl_masuk = Carbon::parse($masuk['tgl_masuk'])->format('d-m-Y');
+    // Jabatan dan golongan
+    $pegawai->jabatan_id = $validator['jabatan_id'];
+    $pegawai->status_jabatan_id = $validator['status_jabatan_id'];
+    $pegawai->golongan_id = $validator['golongan_id'];
+    $pegawai->mapel_id = $validator['mapel_id'];
 
-        // Kalkulasi kemungkinan pensiun
-        $retirementAge = 60;
-        $ttl = $masuk['ttl']; // Contoh: "Kudus, 2000-03-20"
-        // Pisahkan string berdasarkan ", "
-        list($tempat, $tanggal) = explode(', ', $ttl); // $tempat = "Kudus", $tanggal = "2000-03-20"
-        // Parsing tanggal menggunakan Carbon
-        $retirementDate = Carbon::parse($tanggal)->addYears($retirementAge)->format('d-m-Y');
-        // Simpan hasil ke properti
-        $pegawai->tgl_keluar = $retirementDate;
+    // Sertifikasi
+    $pegawai->tahun_sertifikasi = $validator['tahun_sertifikasi'] ?? null;
+    $pegawai->tempat_sertifikasi = $validator['tempat_sertifikasi'] ?? "-";
+    $pegawai->mengajar_sekolah_lain = $validator['mengajar_sekolah_lain'];
+    $pegawai->sekolah_lain = $validator['mengajar_sekolah_lain'] === 'Ya' ? $validator['sekolah_lain'] : "-";
 
+    
+    // Simpan pegawai
+    $pegawai->save();
 
+    return redirect()->route('pegawai.index', ['filter' => 'notAlmost60'])->with('tambah', 'Data Berhasil Ditambahkan');
+}
 
-        // Jabatan dan golongan
-        $pegawai->jabatan_id = $masuk['jabatan_id'];
-        $pegawai->status_jabatan_id = $masuk['status_jabatan_id'];
-        $pegawai->golongan_id = $masuk['golongan_id'];
-        $pegawai->mapel_id = $masuk['mapel_id'];
-
-        $pegawai->save();
-
-
-        // Simpan riwayat pendidikan
-        foreach ($masuk['pendidikan_masuk'] as $index => $pendidikan_masuk) {
-            Pendidikan::create([
-                'pegawai_id' => $pegawai->id,
-                'pendidikan_masuk' => $pendidikan_masuk,
-                'pendidikan_keluar' => $masuk['pendidikan_keluar'][$index] ?? null,
-                'nama_sekolah' => $masuk['nama_sekolah'][$index],
-                'pendidikan_jurusan' => $masuk['pendidikan_jurusan'][$index] ?? null,
-            ]);
-        }
-
-
-        // Simpan riwayat pekerjaan
-        foreach ($masuk['pekerjaan_masuk'] as $index => $pekerjaan_masuk) {
-            Pekerjaan::create([
-                'pegawai_id' => $pegawai->id,
-                'pekerjaan_masuk' => $pekerjaan_masuk,
-                'pekerjaan_keluar' => $masuk['pekerjaan_keluar'][$index] ?? null,
-                'nama_perusahaan' => $masuk['nama_perusahaan'][$index],
-                'posisi' => $masuk['posisi'][$index] ?? null,
-            ]);
-        }
-
-        return redirect()->route('pegawai.index', ['filter' => 'notAlmost60'])->with('tambah', 'Data Berhasil Ditambahkan');
-    }
 
     public function profile($id)
     {
@@ -212,7 +190,6 @@ class PegawaiController extends Controller
         $jabatan = Jabatan::all();
         $golongan = Golongan::all();
         $mapel = Mapel::all();
-        $pendidikan = Pegawai::with('pendidikan')->find($id);
         $pekerjaan = Pegawai::with('pekerjaan')->find($id);
         $status_jabatan = StatusJabatan::all();
         $provinces = Province::all();
@@ -226,7 +203,6 @@ class PegawaiController extends Controller
 
         return view('admin.pegawai.profile', compact(
             'data',
-            'pendidikan',
             'pekerjaan',
             'mapel',
             'provinces',
@@ -241,30 +217,17 @@ class PegawaiController extends Controller
     public function edit($id) // Menampilkan halaman edit
     {
         $pegawai = Pegawai::findOrFail($id);
-        $tgl_masuk = $pegawai->tgl_masuk;
-        // Ambil data terkait lokasi berdasarkan data pegawai
-        $provinces = Province::all();
-        $kabupaten = !empty($pegawai->prov_id) ? Regency::where('province_id', $pegawai->prov_id)->get() : [];
-        $kecamatan = !empty($pegawai->kab_id) ? District::where('regency_id', $pegawai->kab_id)->get() : [];
-        $desa = !empty($pegawai->kec_id) ? Village::where('district_id', $pegawai->kec_id)->get() : [];
-
         $jabatan = Jabatan::all();
         $status_jabatan = StatusJabatan::all();
         $golongan = Golongan::all();
         $mapel = Mapel::all();
-        $pendidikan = Pendidikan::all(); // Data pendidikan jika diperlukan
         $pekerjaan = Pekerjaan::all(); // Data pekerjaan jika diperlukan
 
         return view('admin.pegawai.edit', compact(
             'pegawai',
-            'provinces',
-            'kabupaten',
-            'kecamatan',
-            'desa',
             'jabatan',
             'golongan',
             'mapel',
-            'pendidikan',
             'pekerjaan',
             'status_jabatan'
         ));
@@ -274,80 +237,76 @@ class PegawaiController extends Controller
     {
         // Cari pegawai berdasarkan ID
         $pegawai = Pegawai::find($id);
-
+    
         if (!$pegawai) {
             return redirect()->route('pegawai.index')->with('error', 'Pegawai tidak ditemukan.');
         }
-
+    
         // Validasi data
         $validated = $request->validate([
             'nuptk' => 'required',
             'nama_pegawai' => 'required',
-            'nip' => 'required',
+            'nbm' => 'required',
+            'alamat' => 'required',
             'ttl' => 'required',
             'jk' => 'required',
             'no_hp' => 'required',
-            'tgl_masuk' => 'required',
+            'pendidikan_terakhir' => 'required',
+            'jurusan' => 'required',
+            'status_perkawinan' => 'required',
+    
+            // jabatan dan golongan
+            'jabatan_id' => 'required',
+            'status_jabatan_id' => 'required',
+            'golongan_id' => 'required',
+            'mapel_id' => 'required',
+    
+            // sertifikasi
+            'tahun_sertifikasi' => 'nullable|date',
+            'tempat_sertifikasi' => 'nullable|string',
+            'mengajar_sekolah_lain' => 'required|in:Ya,Tidak',
+            'sekolah_lain' => 'nullable|required_if:mengajar_sekolah_lain,Ya|string',
         ]);
-
+    
+        
         // Kalkulasi kemungkinan pensiun
         $retirementAge = 60;
-        $ttl = $request->ttl; // Contoh: "Kudus, 2000-03-20"
-        // Pisahkan string berdasarkan ", "
-        list($tempat, $tanggal) = explode(', ', $ttl); // $tempat = "Kudus", $tanggal = "2000-03-20"
-        // Parsing tanggal menggunakan Carbon
-        $retirementDate = Carbon::parse($tanggal)->addYears($retirementAge)->format('Y-m-d');
-
-        // Set tanggal masuk
-        $tgl_masuk = $request->tgl_masuk ?: now()->format('Y-m-d');
-
+        list($tempat, $tanggal) = explode(', ', $validated['ttl']); // Pisahkan "Tempat, Tanggal"
+        $retirementDate = Carbon::parse($tanggal)->addYears($retirementAge)->format('Y-m-d'); // Hitung pensiun
+    
         // Perbarui data pegawai
-        $try = $pegawai->update([
-            'nama_pegawai' => $request->nama_pegawai,
-            'nuptk' => $request->nuptk,
-            'nip' => $request->nip,
-            'ttl' => $request->ttl,
-            'jk' => $request->jk,
-            'no_hp' => $request->no_hp,
-            'tgl_masuk' => $tgl_masuk,
-            'tgl_keluar' => $retirementDate,
-            'jabatan_id' => $request->jabatan_id,
-            'status_jabatan_id' => $request->status_jabatan_id,
-            'golongan_id' => $request->golongan_id,
-            'mapel_id' => $request->mapel_id,
+        $pegawai->update([
+            'tgl_purna' => $retirementDate,
+            'nama_pegawai' => $validated['nama_pegawai'],
+            'nuptk' => $validated['nuptk'],
+            'nbm' => $validated['nbm'],
+            'alamat' => $validated['alamat'],
+            'ttl' => $validated['ttl'],
+            'jk' => $validated['jk'],
+            'no_hp' => $validated['no_hp'],
+            'pendidikan_terakhir' => $validated['pendidikan_terakhir'],
+            'jurusan' => $validated['jurusan'],
+            'status_perkawinan' => $validated['status_perkawinan'],
+    
+            // Jabatan dan golongan
+            'jabatan_id' => $validated['jabatan_id'],
+            'status_jabatan_id' => $validated['status_jabatan_id'],
+            'golongan_id' => $validated['golongan_id'],
+            'mapel_id' => $validated['mapel_id'],
+    
+            // Sertifikasi
+            'tahun_sertifikasi' => $validated['tahun_sertifikasi'] ?? null,
+            'tempat_sertifikasi' => $validated['tempat_sertifikasi'] ?? "-",
+            'mengajar_sekolah_lain' => $validated['mengajar_sekolah_lain'],
+            'sekolah_lain' => $validated['mengajar_sekolah_lain'] === 'Ya' ? $validated['sekolah_lain'] : "-",
         ]);
 
-        // Perbarui pendidikan
-        if ($request->has('pendidikan_masuk')) {
-            $pegawai->pendidikan()->delete();
-
-            foreach ($request->pendidikan_masuk as $index => $pendidikanMasuk) {
-                $pegawai->pendidikan()->create([
-                    'pendidikan_masuk' => $pendidikanMasuk,
-                    'pendidikan_keluar' => $request->pendidikan_keluar[$index] ?? null,
-                    'nama_sekolah' => $request->nama_sekolah[$index],
-                    'pendidikan_jurusan' => $request->pendidikan_jurusan[$index] ?? null,
-                ]);
-            }
-        }
-
-        // Perbarui pekerjaan (opsional, jika dibutuhkan)
-        if ($request->has('pekerjaan_masuk')) {
-            $pegawai->pekerjaan()->delete();
-
-            foreach ($request->pekerjaan_masuk as $index => $pekerjaanMasuk) {
-                $pegawai->pekerjaan()->create([
-                    'pekerjaan_masuk' => $pekerjaanMasuk,
-                    'pekerjaan_keluar' => $request->pekerjaan_keluar[$index] ?? null,
-                    'nama_perusahaan' => $request->nama_perusahaan[$index],
-                    'posisi' => $request->posisi[$index],
-                ]);
-            }
-        }
-
+        // dd($retirementDate);
+    
         return redirect()->route('pegawai.index', ['filter' => 'notAlmost60'])
             ->with('edit', 'Data pegawai berhasil diperbarui.');
     }
+    
 
     function formatTanggalIndo($tanggal)
     {
@@ -384,8 +343,8 @@ class PegawaiController extends Controller
 
     public function getPegawaiByNip(Request $request) //mendapatkan data lengkap untuk kinerja
     {
-        $nip = $request->query('nip');
-        $pegawai = Pegawai::with(['jabatan', 'golongan'])->where('nip', $nip)->first();
+        $nbm = $request->query('nbm');
+        $pegawai = Pegawai::with(['jabatan', 'golongan'])->where('nbm', $nbm)->first();
 
         if ($pegawai) {
             return response()->json([
@@ -396,30 +355,72 @@ class PegawaiController extends Controller
 
         return response()->json(null, 404);
     }
+    
+    public function getNotifications(): JsonResponse
+{
+    $pegawai = Pegawai::with('jabatan')->get();
 
-    public function getkab(Request $request)
-    {
-        $prov_id = $request->prov_id;
-        $regencies = Regency::where('province_id', $prov_id)->get();
+    // Filter pegawai berdasarkan kriteria umur dan jabatan
+    $hampirPensiun = $pegawai->filter(function ($pegawai) {
+        if (isset($pegawai->ttl)) {
+            list($tempat, $tanggal) = explode(', ', $pegawai->ttl);
+            $birthYear = Carbon::parse($tanggal)->year; // Ambil hanya tahun lahir
+            $currentYear = Carbon::now()->year; // Ambil tahun saat ini
+            $umur = $currentYear - $birthYear; // Hitung umur berdasarkan tahun saja
 
-        return response()->json($regencies);
-    }
+            // Jabatan ID = 2: Hampir pensiun jika tahun ini umur 59 (1 tahun lagi 60)
+            if ($pegawai->jabatan_id == 2) {
+                return $umur >= 56;
+            } else {
 
-    public function getkec(Request $request)
-    {
-        $kab_id = $request->kab_id;
-        $districts = District::where('regency_id', $kab_id)->get();
+                return $umur >= 59;
+            }
 
-        return response()->json($districts);
-    }
+            // Jabatan lain: Hampir pensiun jika tahun ini umur 56 (1 tahun lagi 57)
+        }
 
-    public function getdesa(Request $request)
-    {
-        $kec_id = $request->kec_id;
-        $villages = Village::where('district_id', $kec_id)->get();
+        return false;
+    });
 
-        return response()->json($villages);
-    }
+    // Format data untuk response
+    $details = $hampirPensiun->map(function ($pegawai) {
+        return [
+            'nama_pegawai' => $pegawai->nama_pegawai,
+            'jabatan' => $pegawai->jabatan->nama_jabatan,
+        ];  
+    });
+
+    return response()->json([
+        'count' => $hampirPensiun->count(),
+        'details' => $details,
+    ]);
+}
+
+
+
+    // public function getkab(Request $request)
+    // {
+    //     $prov_id = $request->prov_id;
+    //     $regencies = Regency::where('province_id', $prov_id)->get();
+
+    //     return response()->json($regencies);
+    // }
+
+    // public function getkec(Request $request)
+    // {
+    //     $kab_id = $request->kab_id;
+    //     $districts = District::where('regency_id', $kab_id)->get();
+
+    //     return response()->json($districts);
+    // }   
+
+    // public function getdesa(Request $request)
+    // {
+    //     $kec_id = $request->kec_id;
+    //     $villages = Village::where('district_id', $kec_id)->get();
+
+    //     return response()->json($villages);
+    // }
 
     public function destroy($id)  //function hapus
     {
@@ -438,65 +439,6 @@ class PegawaiController extends Controller
         return redirect()->route('pegawai.index', ['filter' => 'notAlmost60'])->with('hapus', 'Data pegawai berhasil dihapus.');
     }
 
-    // pendidikan
-    public function pendidikan()
-    {
-        $pendidikan_terakhir = PendidikanTerakhir::all();
-        return view('admin.pendidikan.index', [
-            'pendidikans' => $pendidikan_terakhir
-        ]);
-    }
+    
 
-    public function tambah(Request $request)
-    {
-        $masuk = $request->validate(
-            [
-                'pendidikan_terakhir' => 'required|unique:pendidikan_terakhir,pendidikan_terakhir|string|max:255',
-            ],
-            [
-                'pendidikan_terakhir.unique' => 'Nama sudah ada, silakan gunakan nama lain.',
-            ]
-        );
-
-        $pendidikan = new PendidikanTerakhir();
-
-        // Set data pendidikan 
-        $pendidikan->pendidikan_terakhir = $masuk['pendidikan_terakhir'];
-
-        $pendidikan->save();
-        return redirect()->route('pendidikan.index')->with('success', 'Data pendidikan berhasil ditambahkan.');
-    }
-
-    public function editPendidikan(Request $request, $id)
-    {
-
-        $pendidikan = PendidikanTerakhir::find($id);
-
-        if (!$pendidikan) {
-            return redirect()->route('pegawai.index')->with('error', 'Pegawai tidak ditemukan.');
-        }
-
-        // Validasi data
-        $request->validate(
-            [
-                'pendidikan_terakhir' => 'required|unique:pendidikan_terakhir,pendidikan_terakhir,' . $id,
-            ],
-            [
-                'pendidikan_terakhir.unique' => 'Nama sudah ada, silakan gunakan nama lain.',
-            ]
-        );
-
-        $pendidikan->update([
-            'pendidikan_terakhir' => $request->pendidikan_terakhir
-        ]);
-
-        return redirect()->route('pendidikan.index')->with('edit', 'Data pendidikan berhasil diperbarui.');
-    }
-
-    public function hapusPendidikan($id)
-    {
-        $pendidikan = PendidikanTerakhir::findOrFail($id); // Cari data
-        $pendidikan->delete(); // Hapus data
-        return redirect()->route('pendidikan.index')->with('success', 'Data pendidikan berhasil dihapus.');
-    }
 }

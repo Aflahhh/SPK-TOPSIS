@@ -11,4 +11,9 @@ class StatusJabatan extends Model
     use HasFactory;
 
     protected $fillable = ['status_jabatan']; // Kolom yang bisa diisi
+
+    public function pegawais()
+    {
+        return $this->hasMany(Pegawai::class, 'status_jabatan_id');
+    }
 }

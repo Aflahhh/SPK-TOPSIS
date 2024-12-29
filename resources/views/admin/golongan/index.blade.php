@@ -123,7 +123,7 @@
                         @csrf
                         @method('DELETE')
                         <div class="modal-body">
-                            <i>Apakah Anda Yakin Ingin Menghapus Data?</i>
+                            <i>Apakah Anda Yakin Ingin Menghapus Data <strong>{{ $data->golongan }}?</strong></i>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

@@ -11,78 +11,42 @@
 @endif
 
 <main>
-    <div class="container">
-
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-                        <div class="d-flex justify-content-center py-4">
-                            <a href="{{ url('/') }}" class="logo d-flex align-items-center w-auto">
-                                <img src="{{ asset('assets/img/logo.png') }}" alt="">
-                                <span class="d-none d-lg-block">NiceAdmin</span>
-                            </a>
-                        </div><!-- End Logo -->
-
-                        <div class="card mb-3">
-
-                            <div class="card-body">
-
-                                <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">Create Your Account</h5>
-                                    <p class="text-center small">Enter your details to create an account</p>
-                                </div>
-
-                                <form method="POST" action="{{ route('login') }}" class="row g-3 needs-validation"
-                                    novalidate>
-                                    @csrf
-
-                                    <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Username</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                            <input type="text" name="username"
-                                                class="form-control @error('username') is-invalid @enderror"
-                                                id="yourUsername" required value="{{ old('username') }}">
-                                            @error('username')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="yourPassword" class="form-label">Password</label>
-                                        <input type="password" name="password"
-                                            class="form-control @error('password') is-invalid @enderror"
-                                            id="yourPassword" required>
-                                        @error('password')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Login</button>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <p class="small mb-0">Already have an account? <a
-                                                href="{{ route('login') }}">Login here</a></p>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-
-                        <div class="credits">
-                            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-                        </div>
-
-                    </div>
-                </div>
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+          <div class="row d-flex align-items-center justify-content-center h-100">
+            <div class="col-md-5 col-lg-4 col-xl-3 d-none d-lg-block">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvoDnYNaibBfxOtLxqWVWmUQjkoB4z8lgV-g&s"
+                class="img-fluid" alt="Phone image">
             </div>
-
-        </section>
-
-    </div>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 p-5 border border-1 shadow-lg">
+              <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
+                @csrf
+                <!-- Username input -->
+                <h2 class="text-center">FORM LOGIN</h2>
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form1Example13">Username</label>
+                  <input type="text" name="username" id="form1Example13" class="form-control form-control-lg @error('username') is-invalid @enderror" required value="{{ old('username') }}" />
+                  @error('username')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+      
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form1Example23">Password</label>
+                  <input type="password" name="password" id="form1Example23" class="form-control form-control-lg @error('password') is-invalid @enderror" required />
+                  @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+      
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-lg btn-block w-100">Login</button>
+      
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      
 </main>
